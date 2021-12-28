@@ -1,0 +1,189 @@
+
+								
+								slicing works different with mutable and immutable
+								--------------------------------------------------
+
+example: THIS IS VERY IMPORTANT
+--------
+-->The [:] syntax works for lists. However, there is an important difference between how this operation works with a list and how it works with a string.
+
+If s is a string, s[:] returns a reference to the same object:
+
+>>> s = 'foobar'
+>>> s[:]
+'foobar'
+>>> s[:] is s
+True
+
+-->the main thing is the slicing works different way when comes to the mutable and the immutable data types. but when comes to the list it is different. see below : 
+exmaple :
+--------
+a = [1,2,3]
+print(a is a[:])
+
+output:
+-------
+False
+
+-->here the a and a[:], they both pointing to the different address. but when come to the string it is different. not only string, if you take any other immutable object, it works different way. let's take a look at the tuple : 
+example:
+--------
+a = (1,2,3)
+print(a is a[:])
+
+output:
+-------
+True
+
+-->here the 'a' and 'a[:]', they pointing the same address.
+
+---------------------------------------------------------------------------------------------------------------
+
+-->find a given number is armstrong number or not 
+
+solution :
+----------
+def armstrong(number):
+    total = 0
+    for i in number:
+        total = total + int(i) ** 3
+
+    if int(number) == total:
+        print(f'the number {number} is the armstrong number')
+    else:
+        print(f'the number {number} is not armstrong')
+
+number = input('enter the number : ')
+
+armstrong(number)
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Task
+Given an integer, , perform the following conditional actions:
+
+If  is odd, print Weird
+If  is even and in the inclusive range of 2 to 5, print Not Weird
+If  is even and in the inclusive range of 6 to 20, print Weird
+If  is even and greater than 20, print Not Weird
+
+solution :
+----------
+def func(n):
+    if n % 2 != 0:
+        return 'wierd'
+    elif n % 2 == 0:
+        if n in range(2, 6):
+            return 'not weird'
+        elif n in range(6, 21):
+            return 'weird'
+        elif n > 20:
+            return 'not weird'
+
+print(func(int(input('enter the number : '))))
+
+output:
+-------
+enter the number : 5
+wierd
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Minion game:
+------------
+
+Game Rules
+
+Both players are given the same string, .
+Both players have to make substrings using the letters of the string .
+Stuart has to make words starting with consonants.
+Kevin has to make words starting with vowels.
+The game ends when both players have made all possible substrings.
+
+Scoring
+A player gets +1 point for each occurrence of the substring in the string .
+
+For Example:
+String  = BANANA
+Kevin's vowel beginning word = ANA
+Here, ANA occurs twice in BANANA. Hence, Kevin will get 2 Points.
+
+solution:
+---------
+def minion(string):
+    vowels = ('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U')
+    stuart_score = 0
+    kevin_score = 0
+    kevin_words = []
+    stuart_words = []
+
+    for i in range(len(string)):
+        if string[i] not in vowels:
+        	#this count the combinations based on the count like for 'hell' it takes h, he, hel, hell
+            stuart_score += len(string[i : ])
+            
+        elif string[i] in vowels:
+            kevin_score += len(string[i : ])
+            
+    print('stuart score is :',  stuart_score)
+    print('kevin score is : ', kevin_score)
+
+    if stuart_score > kevin_score:
+        print('stuart wins')
+
+    elif stuart_score < kevin_score:
+        print('kevin wins')
+        
+    else:
+        print('both wins')
+
+
+minion(input('enter the string : '))
+
+-->the above code can give you the number of combinations, but it don't print all the word combinations. below code prints all the details : 
+
+solution : 
+----------
+def minion(string):
+    vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+    stuart_score = 0
+    kevin_score = 0
+    kevin_words = []
+    stuart_words = []
+
+    for i in range(len(string)):
+        if string[i] not in vowels:
+            temp = string[i : ]
+            #this count the combinations based on the count like for 'hell' it takes h, he, hel, hell
+            stuart_score += len(string[i : ])
+            for i in range(len(temp)):
+                stuart_words.append(temp[0 : i + 1])
+            
+            
+        elif string[i] in vowels:
+            temp = string[i : ]
+            #this count the combinations based on the count like for 'hell' it takes h, he, hel, hell
+            kevin_score += len(string[i : ])
+            for i in range(len(temp)):
+                kevin_words.append(temp[0 : i + 1])
+            
+    print('stuart score is :',  stuart_score)
+    print('\nstuart combination words :',  stuart_words)
+    print('\nkevin score is : ', kevin_score)
+    print('\nkevin combination words :', kevin_words)
+
+    if stuart_score > kevin_score:
+        print('\nstuart wins')
+
+    elif stuart_score < kevin_score:
+        print('\nkevin wins')
+        
+    else:
+        print('\nboth wins')
+
+
+minion(input('enter the string : '))
+
+

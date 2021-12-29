@@ -186,4 +186,329 @@ def minion(string):
 
 minion(input('enter the string : '))
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+												29-12-2021
+												----------
+
+
+functions:
+----------
+-->the type of the function variable, it is always belogns to the class 'function', see below :
+
+example:
+--------
+def func():
+    pass
+
+print(type(func))
+
+output:
+-------
+<class 'function'>
+
+
+-->if you check the return type of the function, then it will return "NoneType" if it is not returning anything, if it is return anything, then it return the data type of the returning values. see below : 
+
+example:
+--------
+def func():
+    pass
+
+print(type(func()))
+
+output:
+-------
+<class 'NoneType'>
+
+
+-->for example if the function is returning the string, then the return type of the function is string. see below : 
+
+example:
+--------
+def func():
+    return 'hello world'
+
+print(type(func()))
+
+output:
+-------
+<class 'str'>
+
+
+functions vs methods:
+----------------------
+-->if we write the function inside the class, then the type of that function is not 'class function'. see below :
+
+example:
+--------
+class Hello:
+
+    def func(self):
+        pass
+
+obj = Hello()
+print(type(obj.func))
+
+output:
+--------
+<class 'method'>
+
+-->here, when we write the function inside the class, the type of that function variable is changed to 'class method'. if we don't write the function inside the class, then that' function variable's return type is 'class function'. this one of the way to identify the difference between the functions and methods. 
+
+
+inner functions:
+----------------
+-->these are just function within another function, we can call them as the nested functions.
+
+example:
+--------
+def outer():
+    print('this is the outer function')
+    def inner():
+        print('this is the inner function')
+    return inner()
+
+outer()
+
+output:
+-------
+this is the outer function
+this is the inner function
+
+
+encapsulation with inner functions:
+-----------------------------------
+-->A common use case of inner functions arises when you need to protect, or hide, a given function from everything happening outside of it so that the function is totally hidden from the global scope. This kind of behavior is commonly known as encapsulation.
+
+example:
+--------
+def add(number):
+    def inner():
+        return number + 1
+    return inner()
+
+inner()
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 6, in <module>
+    inner()
+NameError: name 'inner' is not defined
+
+-->here we can't access the inner function directly, because the outer function is hiding the inner function from accessing directly.
+
+
+-->the inner function has access to the outer functions state.
+
+example:
+--------
+def square(number):
+    def inner(power):
+        return number ** power
+    return inner(2)
+
+print(square(10))
+    
+output:
+-------
+100
+
+-->here the inner function has the access to the outer function data 'number'. 
+
+example : writing multiple nested functions
+---------
+def square(number):
+    def outer(power):
+        def inner():
+            return number ** power
+        return inner()
+    return outer(2)
+
+print(square(10))
+    
+output:
+-------
+100
+
+-->here the 'inner' function has the access to the parameters of the outer functions outer and square.
+
+
+
+recursion functions:
+--------------------
+-->a function which calls itself again and again. 
+
+example: calculate the sum of first 10 numbers
+--------
+def func(number):
+    if number == 1:
+        return 1
+    else:
+        return number + func(number - 1)
+
+print(func(20))
+
+output:
+-------
+55
+
+
+-->there is another way we can write the above program
+
+example:
+--------
+def func(number):
+    return number + func(number - 1) if number > 0 else 0 
+
+print(func(5))
+
+output:
+--------
+15
+
+
+example: calculate the factorial of a number using recursion 
+--------
+def func(number):
+    if number == 1:
+        return 1
+    else:
+        return number * func(number - 1)
+
+print(func(6))
+
+output :
+--------
+720
+
+
+functions are the fist class object:
+------------------------------------
+-->the functions in python are called as the first class objects, there are 4 main reasons : 
+1)we can return a function from another function
+2)we can pass the function as the argument to anothe function
+2)we can store the return value of the function in a variable
+4)we can create one function within another function
+
+pass function as the argument:
+------------------------------
+example:
+--------
+def add():
+    return 10 + 20
+
+def result(add):
+    value = add()
+    return value
+
+print(result(add))
+
+output:
+-------
+30
+
+-->here I passed the function 'add' as the argument to the function 'result'. we can also pass the anonymous functions 'lambda' as the argument to another function. see below :
+
+example:
+--------
+def result(add):
+    value = add()
+    return value
+
+print(result(lambda : 10 + 20))
+
+output:
+--------
+30
+
+-->we can also write the above program by simplye storing the lambda function in a variable and pass that variable. see below : 
+
+example:
+--------
+def result(add):
+    value = add()
+    return value
+
+value = lambda : 10 + 20
+print(result(value))
+
+output:
+-------
+30
+
+
+-->let's prints numbers from 1 to 10, by passing the function as the argument in the list comprehension
+example:
+--------
+def func():
+    return 10
+
+print([i for i in range(func())])
+
+output:
+-------
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
+
+
+Task:
+-----
+-->in the below list, find the names with maximum marks and sorted the names
+
+solution:
+---------
+data = [['b', 10], ['c', 20], ['a', 20]]
+
+names = []
+marks = []
+
+for i, j in data:
+    names.append(i)
+    marks.append(j)
+
+max_marks = max(marks)
+
+list1 = []
+
+for i, j in data:
+    if j == max_marks:
+        list1.append(i)
+
+print(sorted(list1))
+
+output:
+-------
+['a', 'c']
+
+
+Task:
+-----
+-->sort dictionary based on values:
+
+solution:
+---------
+data = [['b', 10], ['a', 20], ['c', 20]]
+
+names = []
+marks = []
+dict1 = {}
+
+for i, j in data:
+    dict1[i] = j
+
+for i, j in dict1.items():
+    value = max(dict1.values())
+    if j == value:
+        print(i)
+
+output:
+-------
+a
+c
+
 

@@ -512,3 +512,276 @@ a
 c
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+												Decorators(3-1-2022)
+												--------------------
+
+-->the decorators pattern is an object oriented design pattern that allows behaviour to be added to an existing object dynamically. when you decorate an object then you extend it's functionality in a way that is independet of other instances of the same class.
+
+-->python decorators add functionality to functions and methods at the definitions time, they are not used to add the functinality at run time.
+
+-->we have 2 types of decorators in python. decorators can be applied to both functions and classes.
+1)function decorator
+2)class decorator
+
+
+function decorator:
+-------------------
+-->to implement the function decorator, we need 2 functions. one function is to take the decorator function as the argument and an inner function to call the decorator function. first let's see how the inner functions works. 
+
+example:
+--------
+def outer():
+    print('this is the outer function')
+    def inner():
+        print('this is the inner function')
+    return inner
+
+print(outer())
+
+output:
+-------
+this is the outer function
+<function outer.<locals>.inner at 0x0000000002D74670>
+
+-->here it returned the function object, the reason is the return value of the outer() is 'inner' which is the function variable. if you print the function variable, it will give you the address. here the inner() is not called, you can call it in the return statement. see below : 
+
+example:
+--------
+def outer():
+    print('this is the outer function')
+    def inner():
+        print('this is the inner function')
+    return inner()
+
+print(outer())
+
+output:
+-------
+this is the outer function
+this is the inner function
+None
+
+-->here it returns the 'None', the reason is the inner function is not returning anything. if the functions is not returnig anything it's return value is None. 
+
+-->let's taka look at the sample decorator : 
+
+example:
+--------
+def decorator(func):
+    print('this is the decorator function')
+    def inner():
+    	
+        print('this is the inner function')
+        func()
+        
+    return inner
+
+@decorator
+def main():
+    print("this is the main function ")
+
+main()
+
+output:
+-------
+this is the decorator function
+this is the inner function
+this is the main function 
+
+-->here the we have the decorator function 'decorator'. main() is the decorated function. the 'decorator' function takes the 'main' as the argument. her func = main. the reason why we have the 'inner' function is, it called the 'main' function.
+
+-->actually this is the new style of implementing the function decorators. before '@' was introduced, there is another way to invoke the decorators. see below : 
+
+example:
+--------
+def decorator(func):
+    print('this is the decorator function')
+    def inner():    	
+        print('this is the inner function')
+        func()
+        
+    return inner
+
+
+def main():
+    print("this is the main function ")
+
+main = decorator(main)
+
+main()
+
+output:
+-------
+this is the decorator function
+this is the inner function
+this is the main function 
+
+-->here instread of using the '@' symbol, we invoked the decorator in the old style. here 'decorator(main)' calls the decorator function with 'main' as the argument. the return value of the 'decorator(func) is 'inner'. now the main is point to the 'inner'. so when you call the main(), it calls the inner() functions.
+
+-->we can decorator many functions using the single decorator. see below : 
+
+exmaple:
+--------
+def decorator(func):
+    def inner():
+        print('this is the function : ', func.__name__)
+    return inner
+
+@decorator
+def func1():
+    print('this is func1')
+
+@decorator
+def func2():
+    pass
+
+func1()
+func2()
+
+output:
+-------
+this is the function :  func1
+this is the function :  func2
+
+-->here we decorated the 2 functions func1 and func2. when you call func1(), func(2), they calls the inner function 2 times. 
+
+-->let's write the above progrma without using the '@decorator'. see below : 
+
+example:
+---------
+def decorator(func):
+    def inner():
+        print('this is the function : ', func.__name__)
+    return inner
+
+
+def func1():
+    print('this is func1')
+
+func1 = decorator(func1)
+func1()
+
+
+def func2():
+    pass
+
+func2 = decorator(func2)
+func2()
+
+output:
+-------
+this is the function :  func1
+this is the function :  func2
+
+
+-->we can write the nested decorators also. see below :
+example:
+--------
+def first_dec(func):
+    def inner():
+        print('this is the first decorator')
+        return func()
+    return inner
+
+def second_dec(func):
+    def inner():
+        print('this is the second decorator')
+        return func()
+    return inner
+
+@first_dec
+@second_dec
+def main():
+    print('this is the main function')
+
+main()
+
+output:
+-------
+this is the first decorator
+this is the second decorator
+this is the main function
+
+-->here the inner decorator executes first, then the outer decorator executes, then finally the main() function is called. let's write this code without using '@decorator'.
+
+example:
+--------
+def first_dec(func):
+    def inner():
+        print('this is the first decorator')
+        return func()
+    return inner
+
+def second_dec(func):
+    def inner():
+        print('this is the second decorator')
+        return func()
+    return inner
+
+def main():
+    print('this is the main function')
+
+main = first_dec(second_dec(main))
+
+main()
+
+output:
+-------
+this is the first decorator
+this is the second decorator
+this is the main function
+
+
+@wraps:
+-------
+-->there is one flaw in code written above. see below : 
+
+example:
+--------
+def decorator(func):
+    def inner():
+        print('this is the inner function : ', func.__name__)
+        func()
+    return inner
+
+@decorator
+def main():
+    print('this is the main function')
+
+main()
+main()
+
+output:
+-------
+this is the inner function :  main
+this is the main function
+this is the inner function :  main
+this is the main function
+
+-->here every time we call the main() function, it is not calling the main() function, it is called the inner() function. the reason is the main function variable 'main' is pointing to the inner() function variable 'inner'. but this is not how it should be. the function variable 'main' should always pointing to it's function main(). so avoid that we have to use the other decorator '@wraps' from the 'functools' module. see below : 
+
+example:
+--------
+from functools import wraps
+def decorator(func):
+    @wraps(func)
+    def inner():
+        print('this is inner function : ', func.__name__)
+        func()
+    return inner
+
+@decorator
+def main():
+    print('this is the main function')
+
+main()
+
+-->For the decorator '@wraps(func)', we have to pass the function variable for which we want to do dereferencing. here the 'func' contains 'main', so @wraps(func) make the referencing, so that after the execution of the above code main is no longer points to the 'inner' function. 
+'
+
+
+
+
+

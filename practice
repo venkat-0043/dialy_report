@@ -781,6 +781,238 @@ main()
 -->For the decorator '@wraps(func)', we have to pass the function variable for which we want to do dereferencing. here the 'func' contains 'main', so @wraps(func) make the referencing, so that after the execution of the above code main is no longer points to the 'inner' function. 
 '
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+										       04-01-2022
+											----------
+
+class decorators:
+-----------------
+-->a decorator can not only be a function, it can also be a class. when compared to the execution flow, the class decorators are bit different from the function decorators. see below :
+
+example:
+--------
+class entry_exit():
+
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self):
+        print('entering into the ', self.f.__name__)
+        self.f()
+        print('exiting the function', self.f.__name__)
+
+@entry_exit
+def func1():
+    print('inside func1')
+
+@entry_exit
+def func2():
+    print('inside func2')
+
+func1()
+func2()
+
+-->here when the control hits the '@entry_exit', it calls the '__init__()' constructor, with function variable 'func1' as the argument. so in the __ini__(self, f), f contains the 'func1'. the samething applicable for the function 'func2'. when func1() and func2() is called, internally '__call__()' method will be called, here we override the dunder __call__() method. this method will call the main functions 'func1' and 'func2'. 
+
+-->while working with the functiond decorators, we invoked the decorator without using the '@' syntax. for the class decorators also we can invoke them without using the '@'. see below : 
+
+example:
+--------
+class Entry_exit():
+
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self):
+        print('before the function : ', self.f.__name__)
+        self.f()
+        print('after the function : ', self.f.__name__)
+
+def func1():
+    print('this is the func1')
+
+func1 = Entry_exit(func1)
+
+def func2():
+    print('this is the func2')
+
+func2 = Entry_exit(func2)
+
+func1()
+func2()
+
+output:
+-------
+before the function :  func1
+this is the func1
+after the function :  func1
+before the function :  func2
+this is the func2
+after the function :  func2
+
+
+-->the reason why the class decorator class the __init__() method is, the syntax 'func2 = Entry_exit(func2)', here the 'Entry_exit(func2)', is like the object instantiation syntax. so when instantiation happens, it calls the __init__() constructor immediately.
+
+-->here the syntax 'func1 = Entry_exit(func1)', you may get the doubt that, func1 could be the object. actually here func1 represents the object as well as the function variable. so here 'self' represents the object as well as the function variable. so you can call like 'self()'. it dont' give error, but it goes into the infinite loop. because every time you call self(), it calls the __call__() method, again self() is called, again __call__() is executed. so avoid this practice. see below code : 
+
+example:
+--------
+class Entry_exit():
+
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self):
+        print('before the function : ', self.f.__name__)
+        self()
+        print('after the function : ', self.f.__name__)
+
+def func1():
+    print('this is the func1')
+
+func1 = Entry_exit(func1)
+
+def func2():
+    print('this is the func2')
+
+func2 = Entry_exit(func2)
+
+func1()
+func2()
+
+-->this code goes into infinite loop.
+
+
+decorators with arguments:
+--------------------------
+-->we can pass the arguments to the function decorators. for writing the decorators with arguments, you need to have 2 inner functions. see below : 
+
+example:
+--------
+import random
+def power_of(exponent):
+    def decorator(func):
+        def inner():
+            return func() ** exponent
+        return inner
+    return decorator
+
+power = int(input('enter the exponent : '))
+
+@power_of(power)
+def random_odd_digit():
+    return random.choice([3,5,7])
+
+print(random_odd_digit())
+
+output:
+-------
+enter the exponent : 2
+9
+
+-->here the reason why we have 3 functions in the decorator is, the outer function will take the argument, next the decorator function takes the function as the argument and the inner function is used to call the main function or decorated function. let's write the above code without using the '@' syntax : 
+
+example:
+---------
+import random
+def power_of(exponent):
+    def decorator(func):
+        def inner():
+            return func() ** exponent 
+        return inner
+    return decorator
+
+power = int(input('enter the exponent : '))
+
+def random_odd_digit():
+    return random.choice([3,5,7])
+
+random_odd_digit = power_of(power)(random_odd_digit)
+
+print(random_odd_digit())
+
+
+builtin decorators:
+-------------------
+-->we previously used the built in decorators like @classmethod, @staticmethod. let's see how we can use them. the normal way of using them is using the '@' syntax. see below :
+
+example:
+--------
+class A:
+
+    @classmethod
+    def hello(cls):
+        return f'this is the static method'
+
+print(A.hello())
+
+output:
+-------
+this is the static method
+
+-->let's write the above code without using '@' syntax. see below :
+
+example:
+--------
+class A:
+    
+    def hello(cls):
+        return f'this is the static method'
+
+A.hello = classmethod(A.hello)
+print(A.hello())
+
+output:
+--------
+this is the static method
+
+-->let's try the @staticmethod. see below 
+
+example:
+--------
+class A:
+    
+    def hello():
+        return f'this is the static method'
+
+A.hello = staticmethod(A.hello)
+print(A.hello())
+
+output:
+-------
+this is the static method
+
+
+
+task:
+-----
+s = 'AAABCADDE'
+
+k = 3
+
+value = len(s) //  k
+
+print(value)
+
+
+list1 = [[] for i in range(k)]
+
+for i, j in zip(range(0, len(s), value), range(k)):
+    for ch in s[i : i + value ]:        
+        list1[j].append(ch)
+    
+print(list1)
+
+list2 = [[] for i in range(k)]
+for i in range(len(list1)):
+    for j in list1[i]:
+        if j not in list2[i]:
+            list2[i].append(j)
+
+for i in list2:
+    print(''.join(i)) 
 
 
 

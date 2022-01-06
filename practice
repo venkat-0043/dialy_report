@@ -1015,5 +1015,260 @@ for i in list2:
     print(''.join(i)) 
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                                                05-01-2022
+                                                ----------
+
+requiremnt :
+-------------
+-->take a string, generate all combinations of the substring. the substring should not have the duplicate characters. return the longest substring which don't have the duplicate characters.
+
+solution:
+---------
+string = 'abdfdddgee'
+
+
+set1 = set()
+length = len(string)
+
+for i in range(length + 1):
+    for j in range(i, length + 1):
+        set1.add(string[i : j ])
+
+
+set1.remove('')
+print(set1)
+
+set2 = set()
+for i in set1:
+    result = ''
+    for j in i:
+        if j in i and i.count(j) == 1:
+            result = result + j
+            set2.add(result)
+            
+print(set2)
+
+dict1 = dict()
+
+for i in set2:
+    dict1[i] = len(i)
+
+count = max(dict1.values())
+print(count)
+
+for key, value in dict1.items():
+    if value == count:
+        print(key)
+
+
+
+files:
+------
+-->to work with files we use method open() to open the files. by default the open() method opens the file in teh read mode. the open() method return the file object. see below :
+
+example:
+--------
+print(open('sample.txt'))
+
+output:
+-------
+<_io.TextIOWrapper name='sample.txt' mode='r' encoding='cp1252'>
+
+-->this file object is iterable. to get the data we can loop over this file object. see below :
+
+example:
+--------
+f = open('sample.txt')
+for i in f:
+    print(i)
+
+output:
+-------
+hello world
+
+this is python
+
+how are you
+
+-->If you check the output, it adds the new line after every line. this is simply putting a new line character after every line. to avod the new line, use the end = ''. see below : 
+
+example:
+--------
+f = open('sample.txt')
+for i in f:
+    print(i, end = '')
+
+output:
+-------
+hello world
+this is python
+how are you
+
+-->if you use the open() method, we have to close the file manually usign the method close(). once the file is closed, we can access the file object, but we can't loop over the file object. see below :
+
+example:
+--------
+f = open('sample.txt')
+for i in f:
+    print(i, end = '')
+
+f.close()
+
+for i in f:
+    print(i)
+
+output:
+-------
+hello world
+this is python
+how are youTraceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 7, in <module>
+    for i in f:
+ValueError: I/O operation on closed file.
+
+
+-->to check if the file is closed or not closed, we can use the file attribute 'closed'. this returns true or false. see below : 
+
+example:
+--------
+f = open('sample.txt')
+for i in f:
+    print(i, end = '')
+    
+print('\n',f.closed)
+
+f.close()
+
+print('\n', f.closed)
+
+output:
+-------
+hello world
+this is python
+how are you
+ False
+
+ True
+
+ -->to read the data from the file object, we have some other methods read(), readline(), readlines().
+
+ read():
+ -------
+ -->the read() method reads the whole data at once.
+
+ example:
+ --------
+f = open('sample.txt')
+print(f.read())
+
+output:
+-------
+hello world
+this is python
+how are you
+
+-->if you loop over the f.read(), you will get the data character by character. see below :
+
+example:
+--------
+f = open('sample.txt')
+for i in f.read():
+    print(i)
+
+output:
+-------
+h
+e
+l
+l
+o
+ 
+w
+o
+r
+l
+d
+
+-->the reason why this printing character by character is, the read() method reads all data at once in the form of string. if you loop over a string, you will get the each individual character from the string. 
+
+
+readline():
+------------
+-->the readline() method reads the one line at a time. see below :
+
+example:
+--------
+f = open('sample.txt')
+print(f.readline())
+
+output:
+-------
+hello world
+
+>>>
+
+-->Here it print the new line after the line. the reason the readline() add the new line character at the end of the line it reads. to get all the data, we can't write this statement again and again. for that we the method readlines():
+
+readlines():
+------------
+-->the readlines() method reads the all the data line by line and add them into the list. see below :
+
+example:
+--------
+f = open('sample.txt')
+print(f.readlines())
+
+output:
+-------
+['hello world\n', 'this is python\n', 'how are you']
+
+-->here each line is stored as the item of list in the string format. it adds the new line character at the end of the each line. when it finds the last line it don't add the new line. to get the individual line use the for loops. see below : 
+
+example:
+--------
+f = open('sample.txt')
+for i in f.readlines():
+    print(i)
+
+output:
+-------
+hello world
+
+this is python
+
+how are you
+
+
+-->with these 3 methods, we can read how many characters we want using the attribute 'size'. see below :
+
+example:
+--------
+f = open('sample.txt')
+print(f.read(10))
+
+output:
+-------
+hello worl
+
+-->here I readed the first 10 characters from the file. by default the size = -1, which means all the data.
+
+-->the the problem with the open() method is we have to close the file manually every time we open the file. To avoid that we use the context managers. any statement the contains the 'with' is the context manager. so that when we exit the with block,it automatically close the file connection. it also works with socket connections also. 
+
+example:
+--------
+with open('sample.txt') as f:
+    for i in f.readlines():
+        print(i)
+
+output:
+-------
+hello world
+
+this is python
+
+how are you
 
 

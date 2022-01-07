@@ -1272,3 +1272,211 @@ this is python
 how are you
 
 
+
+
+-------------------------------------------------------------------------------------------------------------
+
+
+                                            06-01-2022
+                                            ----------
+
+
+writing the data into the file:
+-------------------------------
+-->to write the data into the file we need to open the file the write mode, where we have mention like mode = 'w'.
+
+example:
+--------
+with open('sample.txt', mode = 'w') as f:
+    f.write('this is the new line')
+
+
+-->this opens the file in the write mode and write the line'this is the new line' into the file. if we try to print the result of this operation it simply prints the number of characters it writes into the file. see below : 
+
+example:
+--------
+with open('sample.txt', mode = 'w') as f:
+    print(f.write('this is the new line'))
+
+output:
+-------
+20
+
+-->here it prints 20, because it writes 20 characters into the file. the write operation return the integer values. but while writing it removes the data and overrides the existing data. at that time open the file in the append mode.
+
+-->once we open the file in the write mode, we can't read that file. we can only write into the file. otherwise we get the error. see below :
+
+example:
+--------
+with open('sample.txt', mode = 'w') as f:
+    print(f.write('this is the new line'))
+    print(f.read())
+
+output:
+-------
+20
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 3, in <module>
+    print(f.read())
+io.UnsupportedOperation: not readable
+
+
+-->if we want to open the file in both read and write mode use mode = 'r+'. see below :
+
+exmaple:
+--------
+f = open('sample.txt', mode = 'r+')
+print(f.write('new line added'))
+print(f.read())
+
+output:
+-------
+14
+w line
+
+-->here this write the 14 characters, so it returns 14. But when we read the data it just prints 'w line'. the reason is , previously  have another line 'this is the new line', this is overridden by the new line 'new line added'. since the previous line is big, the 'new line added' was not able to override previous line. but it overridden till 14 character and cursor was waiting at the 14th character. so when we read the file, the cursor was at 14th character, when read it, it is printing the data which is after the 14th character.
+
+
+-->to know exactly where the cursor is pointing, we use the method tell(). this returns the integer. see below :
+
+example:
+--------
+f = open('sample.txt', mode = 'r+')
+print(f.write('new line added'))
+print(f.tell())
+
+output:
+-------
+14
+14
+
+-->here it returns the 14, because the cursor is waiting at the 14th position. we can use the seek() method to cursor whevever we want. this means we can customize the reading position. see below : 
+
+example:
+--------
+f = open('sample.txt', mode = 'r+')
+print(f.write('new line added'))
+
+f.seek(0)
+
+print(f.read())
+
+output:
+-------
+14
+new line addedw line
+
+-->here seek(0) means, put the reading position at the start. the return value of the seek() method is an integer. which means it returns at which character it is placing the cursor. see below : 
+
+example:
+--------
+f = open('sample.txt', mode = 'r+')
+print(f.write('new line added'))
+
+print(f.seek(0))
+print(f.read())
+
+print(f.seek(5))
+print(f.read())
+
+output:
+-------
+14
+0
+new line addedw line
+5
+ine addedw line
+
+
+writing from a file:
+--------------------
+-->we can read the data from a file and write that data into anothe file. for that we need to open the 2 files. see below : 
+
+example:
+--------
+with open('sample.txt') as f:
+    with open('sample1.txt', mode = 'r+') as g:
+        g.write(f.read())
+        print(g.read())
+
+output:
+-------
+
+
+-->here I read the data from file sample.txt and write that data into sample1.txt. then I read the data from the file sample1.txt, but it is not printing anything. the reason is , the cursor position is at the end of the file. so read from the begining just use the seek(0), then read the file. see below :
+
+example:
+--------
+with open('sample.txt') as f:
+    with open('sample1.txt', mode = 'r+') as g:
+        g.write(f.read())
+        g.seek(0)
+        print(g.read())
+
+output:
+-------
+hello world
+this is python
+
+
+-->here we can use the methods readline() and readlines() also.
+
+
+appending the data:
+-------------------
+-->previously when we writing into the file, it is overriding the data. to avoid that we use mode = 'a', where it adds the new at the end of the existing data. see below : 
+
+example:
+--------
+with open('sample.txt', mode = 'a+') as f:
+    f.write('this is the new line')
+    print(f.read())
+
+output:
+-------
+
+
+-->this also returns nothing. becuase it appends the new line at end of the file, so cursor is again at the end of the line. so use seek(0). see below : 
+
+example:
+--------
+with open('sample.txt', mode = 'a+') as f:
+    f.write('this is the new line')
+    f.seek(0)
+    print(f.read())
+
+output:
+-------
+hello world
+this is python
+this is the new line
+
+
+exclusive mode:
+---------------
+-->when you open a non existing file in exclusive mode, it creates a new file, it the file already exists, it returns error. see below : 
+
+example:
+--------
+with open('sample2.txt', mode = 'x') as f:
+    print(f)
+
+output:
+-------
+<_io.TextIOWrapper name='sample2.txt' mode='x' encoding='cp1252'>
+
+-->here there is not file named 'sample2.txt', so it creates the new file and the operation is successful. if we run this code for the second time, it throws the exception. 
+
+example:
+--------
+with open('sample2.txt', mode = 'x') as f:
+    print(f)
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 1, in <module>
+    with open('sample2.txt', mode = 'x') as f:
+FileExistsError: [Errno 17] File exists: 'sample2.txt'
+
+

@@ -1480,3 +1480,316 @@ Traceback (most recent call last):
 FileExistsError: [Errno 17] File exists: 'sample2.txt'
 
 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+ 									08-01-2022
+                                            				----------
+
+Exceptions:
+-----------
+-->exceptions are the run time error. even though the syntax is correct, due to some logical error, it will stops the execution and raises the exception. examples are like ZeroDivision, StopIteration, ArithmeticError etc.
+
+example:
+--------
+print(10/0)
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 1, in <module>
+    print(10/0)
+ZeroDivisionError: division by zero
+
+-->here this raise the zerodivisionerror, because anything divide with zero is infinity. In exceptions we have 3 blocks. 
+
+1)try
+2)catch
+3)finally
+
+-->whatever the block of code or statement might causing the exception, we write that block of code in the try block. it any exception is raised it will be catched in the 'catch' block. the 'finally' block will executes irrelavent of wether the exception is raised or not. 'finally' block is useful tell you that you reached the end of the excecution. 
+
+-->let's catch the zerodivisionerror exception : 
+
+example:
+--------
+try:
+    print(10/0)
+
+except ZeroDivisionError:
+    print('exception is raised')
+
+output:
+-------
+exception is raised
+
+
+-->here we used the relavent exception. what if we don't know the exact exception, use the parent exception "Exception". see below :
+
+example:
+--------
+try:
+    print(10/0)
+
+except Exception:
+    print('exception is raised')
+
+output:
+-------
+exception is raised
+
+-->here there is a problem with this. we don't know the exactly what kind of exception we are getting. at that time use the 'Exception' class object. see below :
+
+example:
+--------
+try:
+    print(10/0)
+
+except Exception as e:
+    print('exception is raised is : ', e)
+
+output:
+-------
+exception is raised is :  division by zero
+
+
+multiple except blocks:
+-----------------------
+-->we can write the multiple 'except' blocks. so that the relavent exception will catched. see below : 
+
+example:
+--------
+string = 'hello'
+
+try:
+    value = int(string)
+
+except TypeError:
+    print('type of string is incopatible')
+
+except ValueError:
+    print('only accepts the integer')
+
+finally:
+    print('finished execution')
+
+output:
+-------
+only accepts the integer
+finished execution
+
+-->here the first exception is not catched, second exception is catched. there is another way to write the above code. see below : 
+
+example:
+--------
+string = 'hello'
+
+try:
+    value = int(string)
+
+except (TypeError, ValueError):
+    print("enter the correct value")
+
+output:
+-------
+enter the correct value
+
+
+-->The problem with this is, we don't know exactly which exception it is catching. if you want to know which exception is raising, us the 'as' keyword to get the exception object. see below :
+
+example:
+--------
+string = 'hello'
+
+try:
+    value = int(string)
+
+except (TypeError, ValueError) as e:
+    print(e)
+    print(type(e))
+    print("enter the correct value")
+
+output:
+-------
+invalid literal for int() with base 10: 'hello'
+<class 'ValueError'>
+enter the correct value
+
+
+-->if you print the exception object it simply prints the exception message. to know which exception is raised exactly, just use type(e). the reason is 'e' will the object of the exception which is raised. so if print the type of that object, it will simply returns it's class name(exception name).
+
+
+exceptions hierarchy:
+---------------------
+-->always write the subclass exceptions at the begining and the super class excpetions at the end in a hierarchical manner. see the below 
+
+example:
+--------
+x = 10
+y = 'string'
+try :
+
+    result = x / y
+
+except ZeroDivisionError as zde:
+    print(type(zde), zde)
+
+except ValueError as ve:
+    print(type(ve), ve)
+
+except Exception as e:
+    print('super class exception is called')
+        
+output:
+-------
+super class exception is called
+
+-->here when there is no relevant exception is catched, the super class excpetion 'Exception' catches that exception. if we write the super class exception at the begining it catches all the exceptions. control never goes to the other exceptions in the block. see below : 
+
+example:
+--------
+x = 10
+y = 0
+try :
+
+    result = x / y
+    
+except Exception as e:
+    print('super class exception is called')
+
+except ZeroDivisionError as zde:
+    print(type(zde), zde)
+
+except ValueError as ve:
+    print(type(ve), ve)
+
+
+output:
+-------
+super class exception is called
+
+
+-->here the syntax 'result = x / y' raises the 'zerodivisionerror', even though the we have provided the relavent exception, it was caught by the super class 'Exception'. so whatever the exception is raised it will be caught by the super class 'Exception' in the early stages. to make this program more readable, use the object of the exception class. see below : 
+
+example:
+--------
+x = 10
+y = 0
+try :
+
+    result = x / y
+    
+except Exception as e:
+    print('super class exception :', e)
+
+except ZeroDivisionError as zde:
+    print(type(zde), zde)
+
+except ValueError as ve:
+    print(type(ve), ve)
+
+output:
+-------
+super class exception : division by zero
+
+
+Aliasing:
+---------
+-->notice the following line in the code above :
+
+except (exception 1, excpetion 2, ..) as e:
+
+-->that is the exceptions are being given a name. technically, it is called 'aliasing'. with aliasing, we can access the exceptions with a common name. this is useful if you want to use attributes of the exception being handled. aliasing is done through the 'as' keyword. the syntax is : 
+
+try : 
+    # try code
+
+except (exception_1, exception_2,..) as <alias>:
+
+    # exception handling here
+    # you can access attributes of exceptions being handled through it's alias <alias>
+
+
+example:
+--------
+try:
+    raise NameError('undefined name')
+
+except (NameError, ValueError) as er:
+    print('NameError exception was raised')
+
+output:
+-------
+NameError exception was raised
+
+-->you can use any name for the alias(but definitely not the built-in keyword), usually 'e' is just a popular one.
+
+
+Finally clause:
+---------------
+-->the 'try' statement has one last clause 'finally', which is basically used for clean up actions. when used, it should follow all other clauses. 'finally' clause is executed in any even irrespective of whether an exception has occurred or not. 'finally' clause does not strictly need to the 'else' or 'except' clause to be present. see below : 
+
+example:
+--------
+def func(a, b):
+    try:
+        output = a / b
+
+    except ZeroDivisionError:
+        print('zerodivisionerror raised')
+
+    else :
+        print('the result is  : ',output)
+
+    finally:
+        print('program ended')
+
+func(10, 0)
+func(10, 2)
+
+output:
+-------
+zerodivisionerror raised
+program ended
+the result is  :  5.0
+program ended
+
+
+
+
+
+
+
+patterns:
+---------
+-->print the below patterns
+
+a
+a c
+a c e
+a c e g
+
+solution:
+---------
+list1 = [chr(i) for i in range(97, 104)]
+print(list1)
+
+for i in range(0, len(list1), 2):
+    print(' '.join(list1[0 : i + 1 : 2]))
+
+
+-->print the below pattern
+[1]
+[1][2]
+[1][2][3]
+[1][2][3][4]
+[1][2][3][4][5]
+
+solution:
+---------
+for i in range(1, 6):
+    print()
+    for j in range(1, i + 1):
+        print(f'[{j}]', end = '')

@@ -2014,3 +2014,445 @@ print(list1)
 output:
 -------
 [(-1, 0, 1), (-1, 2, -1), (0, 1, -1)]
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+                                                11-01-2022
+                                                ----------
+
+
+Generators:
+-----------
+-->Generators are iterators, a kind of iterable you can only iterate over once. Generators do not store all the values in memory, they generate the values on the fly. we can create the generator object using the tuple comprehensions. see below : 
+
+example:
+--------
+result = (i for i in range(1,6))
+
+print(result)
+
+output:
+-------
+<generator object <genexpr> at 0x0000000002D00F20>
+
+
+-->to get the values from the generator use next() method or use for loop. see below : 
+
+example:
+--------
+result = (i for i in range(1,6))
+
+print(result)
+
+for i in result:
+    print(i)
+
+output:
+-------
+<generator object <genexpr> at 0x0000000002D01F20>
+1
+2
+3
+4
+5
+
+
+-->once we access all the elements of the generator, we can't access them for the second time. let's try : 
+
+example:
+--------
+result = (i for i in range(1,6))
+
+print(result)
+
+for i in result:
+    print(i)
+
+print(next(result))
+
+
+output:
+-------
+<generator object <genexpr> at 0x0000000002D01F20>
+1
+2
+3
+4
+5
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 8, in <module>
+    print(next(result))
+StopIteration
+
+-->here this code raised the stopiteration exception, this means it reaches end of it. at this time we have to use the exceptions.
+
+
+yield:
+------
+-->any function which contains the 'yield' keyword, that function call will create a generator object. see below :
+
+example:
+--------
+def func():
+    yield 'hello world'
+
+a = func()
+print(type(a))
+
+output:
+-------
+<class 'generator'>
+
+-->here 'a', we can call it as the generator object or generator instance. see here that type(a) is class generator. here a = func(), this don't call the function, it just create the generator object. don't think a = func() will create the function variable. if you want to start the execution, you should use the next() method. it will start the execution of generator function. see below : 
+
+
+example:
+--------
+def func():
+    yield 'hello world'
+
+a = func()
+print(next(a))
+
+output:
+-------
+hello world
+
+
+-->yield is just like the 'return' statement. but after 'return' no statement is execute, but for 'yield', it saves the state of the execution and return the control back to it's caller. 
+
+multiple yield statements:
+--------------------------
+-->we can write the multiple yield statement in single function. see below : 
+
+example:
+--------
+def func():
+    yield 1
+    yield 2
+    yield 3
+
+result = func()
+print(next(result))
+print(next(result))
+print(next(result))
+
+output:
+-------
+1
+2
+3
+
+-->we can't write the generators like below : 
+
+example:
+--------
+def func():
+    yield 1
+    yield 2
+    yield 3
+
+print(next(func()))
+print(next(func()))
+print(next(func()))
+
+output:
+-------
+1
+1
+1
+
+-->the reason why this is printing the 1 again and again is, here with the syntax func(), we are creating the new generator instance every time. so if we perform the next() on each new object, they start the executing from the begining. 
+
+
+-->just like the empty return statement return 'None', the same way the empty 'yield' returns 'None'. see below : 
+
+example:
+--------
+def func():
+    return
+
+print(func())
+
+output:
+-------
+None
+
+
+example:
+--------
+def func():
+    yield
+
+result = func()
+print(next(result))
+
+output:
+-------
+None
+
+-->see here if the yield is not returning anything, by defualt it returns 'None'. 
+
+
+send():
+-------
+-->we can send the values to the generator and we can only call the send(), it generator is started. see below : 
+
+example:
+--------
+def func():
+    value = yield
+    yield value
+
+result = func()
+print(next(result))
+print(result.send('hello'))
+
+output:
+-------
+None
+hello
+
+-->here the empty yield return 'None', the we send the value to the yield, then value contains 'hello', then the next 'yield' is executed and prints the 'hello'. if we don't the generator and simply sends a data to it, it will be a error. see below : 
+
+example:
+--------
+def func():
+    value = yield
+    yield value
+
+result = func()
+print(result.send('hello'))
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 6, in <module>
+    print(result.send('hello'))
+TypeError: can't send non-None value to a just-started generator
+
+
+-->here it say you can' send non-None value to a just-started generator. so this means we can send a 'None' value to a just started generator. see below : 
+
+example:
+--------
+def func():
+    value = yield
+    yield value
+
+result = func()
+print(result.send(None))
+
+output:
+-------
+None
+
+
+-->let's send the data 2 times. see below : 
+
+example:
+--------
+def func():
+    value = yield
+    yield value
+
+result = func()
+print(next(result))
+print(result.send('hello'))
+
+print(next(result))
+print(result.send('world'))
+
+output:
+-------
+None
+hello
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 9, in <module>
+    print(next(result))
+StopIteration
+
+
+-->here I tried to send the data 2 times, but it raised the exception. to avoid that use the while loop. see below code :
+
+example:
+--------
+def func():
+    while True:
+        value = yield
+        yield value
+
+result = func()
+print(next(result))
+print(result.send('hello'))
+
+print(next(result))
+print(result.send('world'))
+
+output:
+-------
+None
+hello
+None
+world
+
+
+returning a function using yield:
+---------------------------------
+-->not only a value, we can also return a function using the yield statement. see below : 
+
+example:
+--------
+def func():
+    yield even_numbers()
+
+def even_numbers():
+    return [i * 2 for i in range(1, 11)]
+
+result = func()
+print(next(result))
+
+output:
+-------
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+-->here I am returning a function using the yield statement. 
+
+
+yield with exceptions:
+----------------------
+-->when there is no elements to read, it raises the stopiteration exception. see below :
+
+example:
+--------
+def func():
+    for i in range(5):
+        yield i
+
+result = func()
+
+for i in range(6):
+    print(next(result))
+
+output:
+-------
+0
+1
+2
+3
+4
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 8, in <module>
+    print(next(result))
+StopIteration
+
+
+-->let's handle this exception using try, catch : 
+
+example:
+--------
+def func():
+    for i in range(5):
+        yield i
+
+result = func()
+
+try:
+    for i in range(6):
+        print(next(result))
+
+except StopIteration as e:
+    print('exception is ', type(e))
+
+finally:
+    print('execution finished')
+
+output:
+-------
+0
+1
+2
+3
+4
+exception is  <class 'StopIteration'>
+execution finished
+
+
+yield from:
+-----------
+-->'yield from' is used to return the data from the iterable in a simple way. see below : 
+
+example:
+--------
+def func(x, y):
+    yield from x
+    yield from y
+
+a = [1,2,3]
+b = [4,5,6]
+
+for i in func(a,b):
+    print(i)
+
+output:
+-------
+1
+2
+3
+4
+5
+6
+
+-->if you write the same code without using the yield, it will be like this :
+
+example:
+--------
+def func(x, y):
+    for i in x:
+        yield i
+
+    for j in y:
+        yield j
+
+a = [1,2,3]
+b = [4,5,6]
+
+for i in func(a,b):
+    print(i)
+
+output:
+-------
+1
+2
+3
+4
+5
+6
+
+
+-->we can return multiple values using yield. see below :
+
+example:
+--------
+def func():
+    for i in range(1,6):
+        yield i, i ** 2
+
+for i, j in func():
+    print(i, j)
+
+output:
+-------
+1 1
+2 4
+3 9
+4 16
+5 25
+
+-->here the yield is returning 2 values at a time, to read those 2 values we need 2 loop variables.
+

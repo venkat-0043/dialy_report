@@ -2456,3 +2456,323 @@ output:
 
 -->here the yield is returning 2 values at a time, to read those 2 values we need 2 loop variables.
 
+
+
+
+-------------------------------------------------------------------------------------------------------------
+
+        
+                                                    12-01-2022
+                                                    ----------
+
+what is OOP:
+------------
+-->Object Oriented programming (OOP) is a programming paradigm that relies on the concept of classes and objects. It is used to structure a software program into simple, reusable pieces of code blueprints (usually called classes), which are used to create individual instances of objects. 
+
+class and instance:
+-------------------
+-->classes are used to create user-defined data structures. classes define functions called 'methods', which identify the behaviour and actions that an object created from the class can perform with its data. 
+
+
+singleton classes:
+------------------
+-->Singleton is a creational design pattern, which ensures that only one object of its kind exists and provides a single point of access to it for any other code.
+
+
+constructor:
+------------
+-->The constructor is a method that is called when an object is created. This method is defined in the class and can be used to initialize basic variables.
+
+-->Instance methods are functions that are defined inside a class and can only be called from an instance of that class. Just like .__init__(), an instance method’s first parameter is always self. by default all the methods in the class are instance methods.
+
+example:
+--------
+class HelloWorld(object):
+
+    def __init__(self, message):
+        self.message = message
+
+    def display(self):
+        print(self.message)
+
+s1 = HelloWorld('hi')
+s2 = HelloWorld('hello')
+s3 = HelloWorld('whats up')
+
+s1.display()
+s2.display()
+s3.display()
+
+output:
+-------
+hi
+hello
+whats up
+
+
+-->here the method display() is the instance method. the instance method is called with the object name and also it recievs the object name as it's first argument. we can also call the instance method directly with the constructor syntax. we can write the above program in another way : 
+
+example:
+--------
+class HelloWorld(object):
+
+    def __init__(self, message):
+        self.message = message
+
+    def display(self):
+        print(self.message)
+
+HelloWorld('hi').display()
+HelloWorld('hello').display()
+HelloWorld('whats up').display()
+
+output:
+-------
+hi
+hello
+whats up
+
+-->here with the constructor syntax, we created the object and passed value to the '__init__()' and called the method display(). but this is not a good practice. because this is called as the anonymous objects. we can't use them anywhere.
+
+
+delete the instance method:
+---------------------------
+-->here I tried to delete the instance method using the object outside the class. see below : 
+
+example:
+--------
+class HelloWorld(object):
+
+    def __init__(self, message):
+        self.message = message
+
+    def display(self):
+        print(self.message)    
+
+s1 = HelloWorld('hi')
+s2 = HelloWorld('hello')
+s1.display()
+
+del s1.display
+
+output:
+-------
+hi
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 13, in <module>
+    del s1.display
+AttributeError: display
+
+-->here it is giving the attribute error. which means the object s1 has no attribute 'display'. so if you want to delete the instance method, delete them using the class name. see below :
+
+example:
+---------
+class HelloWorld(object):
+
+    def __init__(self, message):
+        self.message = message
+
+    def display(self):
+        print(self.message)    
+
+s1 = HelloWorld('hi')
+s2 = HelloWorld('hello')
+s1.display()
+
+del HelloWorld.display
+
+output:
+-------
+hi
+
+-->here it don't return error. because it simply deleted that method. we can only delete the instance method using the class name.
+
+
+class method:
+-------------
+-->A class method is a method which is bound to the class and not the object of the class. They have the access to the state of the class as it takes a class parameter that points to the class and not the object instance. It can modify a class state that would apply across all the instances of the class. 
+-->for class methods, we call them using the class name and the class object also. 
+
+example:
+--------
+class HelloWorld(object):
+
+    message = 'hello world'
+
+    def print_message(cls):
+        print(cls.message)
+        
+HelloWorld.print_message()
+
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 8, in <module>
+    HelloWorld.print_message()
+TypeError: print_message() missing 1 required positional argument: 'cls'
+
+-->Normally class method takes the class name as the argument. but here it returns the error. But here we need to mention the method as the class method using the @classmethod decorator. see below : 
+
+example:
+--------
+class HelloWorld(object):
+
+    message = 'hello world'
+
+    @classmethod
+    def print_message(cls):
+        print(cls.message)
+        
+HelloWorld.print_message()
+output:
+-------
+hello world
+
+
+-->we can access the class variable using both class name and object name.
+
+example:
+--------
+class HelloWorld(object):
+
+    message = 'hello world'
+
+    def __init__(self, name):
+        self.name = name        
+
+    @classmethod
+    def print_message(cls):
+        print(cls.message)
+        
+obj = HelloWorld('venkat')
+obj.print_message()
+
+print(obj.message)
+print(HelloWorld.message)
+
+output:
+-------
+hello world
+hello world
+hello world
+
+
+-->if you remember the internal structure of the decorator, then write the decorator @classmethod, in the old style. see below : 
+example:
+--------
+class HelloWorld(object):
+
+    message = 'hello world'
+
+    def printname(cls):
+        print(cls.message)
+
+HelloWorld.printname = classmethod(HelloWorld.printname)
+HelloWorld.printname()
+output:
+-------
+hello world
+
+
+static method:
+-------------
+
+-->A static method is also a method that is bound to the class and not the object of the class. A static method can't access or modify the class state. It is present in a class because it makes sense for the method to be present in class.
+
+-->Static methods in Python are extremely similar to python class level methods, the difference being that a static method is bound to a class rather than the objects for that class. This means that a static method can be called without an object for that class. This also means that static methods cannot modify the state of an object as they are not bound to it. Let’s see how we can create static methods in Python.
+
+
+creating static method:
+-----------------------
+class Calculate:   
+    
+    @staticmethod
+    def addition(x,y):
+        print('addition is : ', x + y)
+
+Calculate.addition(10, 20)
+
+output:
+-------
+addition is :  30
+
+-->as we said earlier we can call the static method with class name. we can also call the static method with object also. see below : 
+
+example:
+--------
+class Calculate:   
+
+    @staticmethod
+    def addition(x,y):
+        print('addition is : ', x + y)
+
+Calculate.addition(10, 20)
+
+#calling the static method with object
+c = Calculate()
+c.addition(20, 30)
+
+output:
+-------
+addition is :  30
+addition is :  50
+
+
+-->if you remember the internal mechanism of the decorators, use the old style decorators to create the static methods using the method "staticmethod()"
+
+example : 
+---------
+class Calculate:   
+
+    def addition(x,y):
+        print('addition is : ', x + y)
+
+Calculate.addition = staticmethod(Calculate.addition)
+Calculate.addition(10, 20)
+
+output:
+-------
+addition is :  30
+
+-->instead of the addition() method, we can give any other names to store the return value of the staticmethod. see below : 
+
+example :
+---------
+class Calculate:   
+
+    def addition(x,y):
+        print('addition is : ', x + y)
+
+Calculate.add = staticmethod(Calculate.addition)
+Calculate.add(10, 20)
+output:
+-------
+addition is :  30
+
+-->here the 'add' becomes the function variable and it points to the static method 'addition'.
+
+-->the static method don't have the direct access to the class variables. see below : 
+
+example :
+---------
+class Calculate:   
+
+    message = 'hello'
+
+    @staticmethod
+    def addition():
+        print('class variable is : ', message )
+
+Calculate.addition()
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 9, in <module>
+    Calculate.addition()
+  File "C:\Users\this\Desktop\sample1.py", line 7, in addition
+    print('class variable is : ', message )
+NameError: name 'message' is not defined
+
+

@@ -2776,3 +2776,471 @@ Traceback (most recent call last):
 NameError: name 'message' is not defined
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+                                            13-01-2022
+                                            ----------
+
+
+                                              Constructors
+                                               ------------
+
+-->The constructor is a method that is called when an object is created. this method is defined in the class and can be used to initialize basic varaibles. 
+
+-->if you create four objects, the class constructor is called four times. every class has a constructor, but it's not required to explicitly define it. 
+
+-->the constructor always has the name 'init' and the name init is prefixed and suffixed with a double underscore(__). we declare a constructor using 'def' keyword, just like methods. we are calling this as constructor because this init also constructing the object attributes. 
+
+def __init__(self):
+    #body of the constructor
+
+-->usually we default constructor and parameterized constructor.
+
+default constructor:
+--------------------
+-->even we don't write the constructor, python will write the default constructor for us. see below : 
+
+example:
+--------
+class Hello():
+
+    def read(self):
+        print('this is the read method')
+
+h = Hello()
+h.read()
+
+output:
+-------
+this is the read method
+
+-->python will treat this code as below :
+
+example:
+--------
+class Hello():
+
+    def __init__(self):
+        pass
+
+    def read(self):
+        print('this is the read method')
+
+h = Hello()
+h.read()
+
+
+parameterised constructor:
+--------------------------
+-->when the contructor is accepting the parameters during the creation of the object. see below : 
+
+example:
+--------
+class Hello():
+
+    def __init__(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def read(self):
+        print(self.a, self.b, self.c)
+
+h = Hello(10, 20, 30)
+h.read()
+
+output:
+-------
+10 20 30
+
+-->we can also use the default parameters for the constructor also. see below  :
+
+example:
+--------
+class Hello():
+
+    #constructor with default parameters
+    def __init__(self, a = 10, b= 20, c = 30):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def read(self):
+        print(self.a, self.b, self.c)
+
+h = Hello()
+h.read()
+
+output:
+-------
+10 20 30
+
+
+constructor overloading with default parameters:
+------------------------------------------------
+-->we can achieve the constructor overloading using the default parameters. see below : 
+
+example:
+---------
+class Demo():
+    num = 101
+
+    def __init__(self, a = 10, b = 20):
+        self.a = a
+        self.b = b
+    
+    def read_number(self):
+        print(self.a, self.b)
+
+obj = Demo(20)
+obj.read_number()
+
+obj1 = Demo(10, 20)
+obj1.read_number()
+
+obj2 = Demo()
+obj2.read_number()
+output:
+-------
+20 20
+10 20
+10 20
+
+-->here constructor can be invoked in 3 different ways. that means we are able to call the same constructor in 3 ways. this is called constructor polymorphism.
+
+
+                                 
+Encapsulation
+-------------
+-->Encapsulation in Python is the process of wrapping up variables and methods into a single entity.In programming, a class is an example that wraps all the variables and methods defined inside it.
+
+
+Using Single Underscore:
+------------------------
+-->A common Python programming convention to identify a private variable is by prefixing it with an underscore. Now, this doesn’t really make any difference on the compiler side of things. The variable is still accessible as usual. But being a convention that programmers have picked up on, it tells other programmers that the variables or methods have to be used only within the scope of the class.
+
+See the below example:
+
+class Person:
+    def __init__(self, name, age=0):
+        self.name = name
+        self._age = age
+ 
+    def display(self):
+        print(self.name)
+        print(self._age)
+ 
+person = Person('Dev', 30)
+#accessing using class method
+person.display()
+#accessing directly from outside
+print(person.name)
+print(person._age)
+
+Output:
+------
+Dev
+30
+Dev
+30
+
+-->It’s clear that the variable access is unchanged. But can we do anything to really make it private? Let’s have a look further.
+
+Using Double Underscores:
+-------------------------
+-->If you want to make class members i.e. methods and variables private, then you should prefix them with double underscores. But Python offers some sort of support to the private modifier. This mechanism is called Name mangling. With this, it is still possible to access the class members from outside it.
+
+Name Mangling:
+--------------
+-->In Python, any identifier with __Var is rewritten by a python interpreter as _Classname__Var, and the class name remains as the present class name. This mechanism of changing names is called Name Mangling in Python.
+
+-->In the below example, in Class person, the age variable is changed and it’s prefixed by leading double underscores.
+
+example:
+--------
+class Person:
+    def __init__(self, name, age=0):
+        self.name = name
+        self.__age = age
+ 
+    def display(self):
+        print(self.name)
+        print(self.__age)
+ 
+person = Person('Dev', 30)
+#accessing using class method
+person.display()
+#accessing directly from outside
+print('Trying to access variables from outside the class ')
+print(person.name)
+print(person.__age)
+
+Output:
+-------
+Dev
+30
+Trying to access variables from outside the class
+Dev
+Traceback (most recent call last):
+  File "Person.py", line 16, in <module>
+    print(person.__age)
+AttributeError: 'Person' object has no attribute '__age'
+
+
+
+Types Of Inheritance:
+---------------------
+-->In Python, based upon the number of child and parent classes involved, there are five types of inheritance. The type of inheritance are listed below:
+
+1)Single inheritance
+2)Multiple Inheritance
+3)Multilevel inheritance
+4)Hierarchical Inheritance
+5)Hybrid Inheritance
+
+
+Single Inheritance:
+-------------------
+-->In single inheritance, a child class inherits from a single-parent class. Here is one child class and one parent class.
+
+Example:
+--------
+-->Let’s create one parent class called ClassOne and one child class called ClassTwo to implement single inheritance.
+
+# Base class
+class Vehicle:
+    def Vehicle_info(self):
+        print('Inside Vehicle class')
+
+# Child class
+class Car(Vehicle):
+    def car_info(self):
+        print('Inside Car class')
+
+# Create object of Car
+car = Car()
+
+# access Vehicle's info using car object
+car.Vehicle_info()
+car.car_info()
+
+Output:
+------
+Inside Vehicle class
+Inside Car class
+
+
+Multiple Inheritance:
+---------------------
+-->In multiple inheritance, one child class can inherit from multiple parent classes. So here is one child class and multiple parent classes.
+
+Example:
+--------
+# Parent class 1
+class Person:
+    def person_info(self, name, age):
+        print('Inside Person class')
+        print('Name:', name, 'Age:', age)
+
+# Parent class 2
+class Company:
+    def company_info(self, company_name, location):
+        print('Inside Company class')
+        print('Name:', company_name, 'location:', location)
+
+# Child class
+class Employee(Person, Company):
+    def Employee_info(self, salary, skill):
+        print('Inside Employee class')
+        print('Salary:', salary, 'Skill:', skill)
+
+# Create object of Employee
+emp = Employee()
+
+# access data
+emp.person_info('Jessa', 28)
+emp.company_info('Google', 'Atlanta')
+emp.Employee_info(12000, 'Machine Learning')
+Output:
+--------
+Inside Person class
+Name: Jessa Age: 28
+
+Inside Company class
+Name: Google location: Atlanta
+
+Inside Employee class
+Salary: 12000 Skill: Machine Learning
+
+-->In the above example, we created two parent classes Person and Company respectively. Then we create one child called Employee which inherit from Person and Company classes.
+
+
+Multilevel inheritance:
+-----------------------
+-->In multilevel inheritance, a class inherits from a child class or derived class. Suppose three classes A, B, C. A is the superclass, B is the child class of A, C is the child class of B. In other words, we can say a chain of classes is called multilevel inheritance.
+
+Example:
+--------
+# Base class
+class Vehicle:
+    def Vehicle_info(self):
+        print('Inside Vehicle class')
+
+# Child class
+class Car(Vehicle):
+    def car_info(self):
+        print('Inside Car class')
+
+# Child class
+class SportsCar(Car):
+    def sports_car_info(self):
+        print('Inside SportsCar class')
+
+# Create object of SportsCar
+s_car = SportsCar()
+
+# access Vehicle's and Car info using SportsCar object
+s_car.Vehicle_info()
+s_car.car_info()
+s_car.sports_car_info()
+
+Output:
+-------
+Inside Vehicle class
+Inside Car class
+Inside SportsCar class
+
+-->In the above example, we can see there are three classes named Vehicle, Car, SportsCar. Vehicle is the superclass, Car is a child of Vehicle, SportsCar is a child of Car. So we can see the "chaining of classes".
+
+
+
+Hierarchical Inheritance:
+--------------------------
+-->In Hierarchical inheritance, more than one child class is derived from a single parent class. In other words, we can say one parent class and multiple child classes.
+
+Example:
+--------
+-->Let’s create ‘Vehicle’ as a parent class and two child class ‘Car’ and ‘Truck’ as a parent class.
+
+class Vehicle:
+    def info(self):
+        print("This is Vehicle")
+
+class Car(Vehicle):
+    def car_info(self, name):
+        print("Car name is:", name)
+
+class Truck(Vehicle):
+    def truck_info(self, name):
+        print("Truck name is:", name)
+
+obj1 = Car()
+obj1.info()
+obj1.car_info('BMW')
+
+obj2 = Truck()
+obj2.info()
+obj2.truck_info('Ford')
+Output:
+-------
+
+This is Vehicle
+Car name is: BMW
+
+This is Vehicle
+Truck name is: Ford
+
+
+Hybrid Inheritance:
+-------------------
+-->When inheritance is consists of multiple types or a combination of different inheritance is called hybrid inheritance.
+
+Example:
+--------
+class Vehicle:
+    def vehicle_info(self):
+        print("Inside Vehicle class")
+
+class Car(Vehicle):
+    def car_info(self):
+        print("Inside Car class")
+
+class Truck(Vehicle):
+    def truck_info(self):
+        print("Inside Truck class")
+
+# Sports Car can inherits properties of Vehicle and Car
+class SportsCar(Car, Vehicle):
+    def sports_car_info(self):
+        print("Inside SportsCar class")
+
+# create object
+s_car = SportsCar()
+
+s_car.vehicle_info()
+s_car.car_info()
+s_car.sports_car_info()
+
+
+
+
+dynamic programing:
+-------------------
+
+requirement : 
+-------------
+-->The Fibonacci numbers are the numbers in the following integer sequence.
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ……..
+
+In mathematical terms, the sequence Fn of Fibonacci numbers is defined by the recurrence relation 
+
+solution :
+----------
+import time
+
+start = time.time()
+#fibonacci numbers
+n = int(input('enter the number : '))
+
+a = 0
+b = 1
+count = 0
+list1 = []
+
+while count <= n + 1:
+    list1.append(a)
+    a,b = b, a + b
+    count = count + 1
+    if count == n + 1:
+        print(list1[n])
+        break
+print(list1)
+
+end = time.time()
+
+print(end - start)
+
+
+-->we can do the samething using the recursion, which is faster and efficient.
+
+solution :
+----------
+import time
+
+start = time.time()
+def fib(n):
+    if n <= 1:
+        return n
+
+    if n > 0:
+        return fib(n-1) + fib(n-2)
+
+print(fib(9))
+end = time.time()
+
+print(end - start)
+
+

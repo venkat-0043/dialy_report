@@ -3244,3 +3244,317 @@ end = time.time()
 print(end - start)
 
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                                15-01-2022
+                                                ----------
+
+Threads:
+---------
+-->the thread is separate flow of execution. this means that your program will have 2 things happening at once. Threads allows us to run multiple tasks concurrently. Here concurrently means running tasks independently. If I am running task A and I can run the task B, i don't have to wait for the task A to complete. one way of having the tasks to run concurrently is having all your tasks to run parallel, which means simultaneously. when the tasks are running simultaneously, they use multiple CPU cores, one CPU core for each task. However this is the problem in python, this is due to something called the Global Interpreter Lock. The GIL prevents the threads from actually running in parallel and they can use only one processor at a time within a script.
+
+-->to work with the threads we use the package 'threading'. 
+
+example:
+--------
+import threading
+
+def func():
+    print('this is the main function')
+
+t = threading.Thread(target = func, name = 'thread1')
+
+t.start()
+
+output:
+-------
+this is the main function
+
+
+-->here we can pass the arguments to the function using the threads. see below : 
+
+example:
+--------
+import threading
+import time
+
+def func(n, name):
+    print(f'this is the thread : {name}')
+
+    time.sleep(n)
+
+    print(f'{name} has wake up from sleep')
+
+t = threading.Thread(target = func, name = 'thread1', args = (5, 'thread1'))
+
+t.start()
+
+output:
+-------
+this is the thread : thread1
+>>> 
+thread1 has wake up from sleep
+
+
+-->In this we used the 'Thread' class from the module 'threading' which is threading.Thread. take a look at the syntax of the Thread. 
+
+t = threading.Thread(target = func, name = 'thread1', args = (5, 'thread1'))
+
+target --> this is the function on which we want to execute the thread.
+name --> the name of our thread. this is useful when we have lot of thread, we can name them to differentiate. 
+args --> argument to our target function, here the target function is 'func'. 
+
+
+-->here I created the theading object 't'. now the thread has been created, to run a thread we use the method t.start(). In the output the cursor is still waiting at the end of the second line, which means the thread is still running.
+
+-->let's add the more statements to the above program. see what happens.
+
+example:
+--------
+import threading
+import time
+
+def func(n, name):
+    print(f'this is the thread : {name}')
+
+    time.sleep(n)
+
+    print('f{name} has wake up from sleep')
+
+t = threading.Thread(target = func, name = 'thread1', args = (5, 'thread1'))
+
+t.start()
+print('\nhello world')
+print('\nhow are you')
+
+output:
+-------
+this is the thread : thread1
+hello world
+
+
+how are you
+>>> f{name} has wake up from sleep
+
+
+-->here i just added the 2 print statements to the main program. consider this as the main program and the thread we created as the secondary program. when we run this, the thread is get executed and before the thread is finished executing the program runs the other statements(2 print statements), after 5 seconds the thread will woke up, but meanwhile the program runs the other statements. this is called parallelism or concurrency. Simply we switched to the main program when the thread is sleeping and switched back when the thread is ready(woke up). It's kind of go back and forth.
+
+
+join():
+-------
+-->If you wanted your thread to actually finish the entire function before it actually jumps back to the main program or main thread, you can use this join() method. t.join() is actually called as the blocking method or the blocking call. it blocks the interpreter from accessing or executing the main program until the thread finishes it's task. It prevents python from executing any other code from the main program until the thread 't' finishes the executing it's function. what happens is we are not going to print the last 2 print statements until the t.join() unblocks when the thread has finished it's task. when the thread completes it's task , then only we are able to move back to those 2 print statements. 
+
+example:
+--------
+import threading
+import time
+
+def func(n, name):
+    print(f'this is the thread : {name}')
+
+    time.sleep(n)
+
+    print('f{name} has wake up from sleep')
+
+t = threading.Thread(target = func, name = 'thread1', args = (5, 'thread1'))
+
+t.start()
+t.join()
+
+print('\nhello world')
+print('\nhow are you')
+
+output:
+-------
+this is the thread : thread1
+f{name} has wake up from sleep
+
+hello world
+
+how are you
+
+
+
+creating and running multiple threads:
+--------------------------------------
+-->Here we created multiple threads that runs concurrently. 
+
+import threading
+import time
+
+def sleeper(n, name):
+    print('hi, I am {}, going to sleep \n'.format(name))
+
+    time.sleep(n)
+    print('{} has woken up from sleep \n'.format(name))
+
+threads_list = []
+
+start = time.time()
+for i in range(5):
+    t = threading.Thread(target = sleeper,
+                         name = 'thread{}'.format(i),
+                         args = (5, 'thread{}'.format(i)))
+
+    threads_list.append(t)
+    t.start()
+    #print('{} has started'.format(t.name))
+
+for t in threads_list:
+    t.join()
+
+end = time.time()
+
+print('time taken : {}'.format(end-start))
+print('all five threads have finished their jobs')
+
+output:
+-------
+hi, I am thread0, going to sleep 
+hi, I am thread3, going to sleep 
+hi, I am thread1, going to sleep 
+hi, I am thread2, going to sleep 
+hi, I am thread4, going to sleep 
+
+thread0 has woken up from sleep 
+thread3 has woken up from sleep 
+thread1 has woken up from sleep 
+thread2 has woken up from sleep 
+thread4 has woken up from sleep 
+
+time taken : 5.125293016433716
+all five threads have finished their jobs
+
+-->here the first for loop creates  5 threads and starts them. In the first for loop thread{}'.format(i) means for each value of i, it creates a threads with names thread0, thread1... thread4. In the second for loop the t.join() will prevent the execution of the other statements. we should not write the join() method immediately after the start() method like
+
+t.start()
+t.join()
+
+-->if you write like this each thread will take 5 seconds and total 25 seconds. the t.join() will not allow the other threads to run until the current threads finishes. that is not we wanted. 
+
+
+example:
+--------
+import time
+
+def sleeper(n, name):
+    print("{} is going to sleep".format(name))
+    time.sleep(n)
+    print("{} is woke up".format(name))
+
+start = time.time()
+
+for i in range(5):
+    sleeper(5, i)
+
+end = time.time()
+
+print("it took {} seconds".format(end-start))
+
+output:
+-------
+0 is going to sleep
+0 is woke up
+1 is going to sleep
+1 is woke up
+2 is going to sleep
+2 is woke up
+3 is going to sleep
+3 is woke up
+4 is going to sleep
+4 is woke up
+it took 25.074434280395508 seconds
+
+-->By this program you know, when we don't use the threads python will run line by line and nothing will run concurrently. When you have threads, the threads will some tasks in the background. when we not doing anything CPU intensive threads are very beneficial. Remember the GIL prevents us from running multiple CPU processes. So whenever we are not doing anything CPU intensive threads can be beneficial. threads are very efficient at using any donwtime or idle time. so when we have one thread waiting for somethinng, we can have antoher thread perform a task. In our example when one thread is sleeping, that is considered idle time, because we were not really using much of the CPU resources. Then python will switch to another thread and then and do some tasks with that thread and if that thread is not doing something we will switch to another thread. 
+
+
+activeCount():
+---------------
+-->this method is used to know the number of threads that are active. In python there are 1 or 2 active threads running by default. when we create a thread and start it, then count will be increment by 1. Actually when we are running a program, it will be called a main thread, when we create a new thread using 'threading' it will create another thread. In python when you write a program, there will one thread allocated to run that program as the main thread. see below.
+
+import threading
+import time
+
+def func():
+    print("ran")
+    time.sleep(1)
+    print('done')
+
+x = threading.Thread(target = func)
+x.start()
+print(threading.activeCount())
+
+output:
+--------
+ran 
+3
+>>> done
+
+-->Here I didn't used the x.join(). if I use the x.join() after the x.start(), then the thread x is gets executed and finishes it's task and thread x will be ended and the activecount will decremented by 1 and returns the activecount as 2. 
+
+
+is_alive():
+-----------
+-->this method is used to check if the thread is still running or not. it returns true if the thread is running, else it returns false. see below : 
+
+example:
+--------
+import threading
+import time
+
+def func():
+    print("ran")
+    time.sleep(1)
+    print('done')
+
+x = threading.Thread(target = func)
+x.start()
+
+time.sleep(2)
+print(x.is_alive())
+
+output:
+-------
+ran
+done
+False
+
+
+create thread in a function:
+----------------------------
+-->we can create the thread inside a function and call the other functions. see below :
+
+example:
+--------
+import threading
+import time
+
+def func(n, name):
+    print(f"running {name}")
+    time.sleep(n)
+    print('done')
+
+
+def func1():
+    for i in range(2):
+        t = threading.Thread(target = func, args = (2, 'thread' + str(i + 1)))
+        t.start()
+        t.join()
+
+func1()
+
+output:
+-------
+running thread1
+done
+running thread2
+done
+
+-->here I am calling the 'func' 2 times by creating the 2 threads and passed the arguments in the function 'func1'. here I passed 2 arguments time, name of the thread.
+
+
+GIL:
+----
+-->The global intepreter lock is the single lock, that is the python interpreter is using to protect crucial shared data structures from getting corrupted when many threads are used. The GIL allows only one thread to execute python instructions at a time. this is the limitation. This causes the threads to be underutilized. There is another thing that makes the threads underutilized is 'waiting for external resources also known as input/output or I/O for short'. This is where the idea of 'asyncio' is came. the goal of the ayncio is "maximize the usage of a single thread by handling I/O asynchronously and enabling concurrent code using coroutines". The asyncio enables single threaded programs to be more productive by filling the gaps that would, otherwise be wasted on waiting on IO. To do efficiantly the asyncio avoids using the blocking functions. During the I/O heavy workload asynchronous IO can work faster than the blocking IO.  

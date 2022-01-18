@@ -3902,3 +3902,280 @@ output:
 <re.Match object; span=(3, 5), match='12'>
 
 -->In this case, [0-9][0-9] matches a sequence of two digits. The first portion of the string 'foo123bar' that matches is '12'.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                                            18-01-2022
+                                            ----------
+
+
+-->You can complement a character class by specifying ^ as the first character, in which case it matches any character that isn’t in the set. In the following example, [^0-9] matches any character that isn’t a digit: 
+
+example:
+--------
+import re
+
+print(re.search('[^0-9]', '12345foo'))
+
+print(re.search('[^0-9]', '12345'))
+
+output:
+-------
+<re.Match object; span=(5, 6), match='f'>
+None
+
+-->here hte match object indicates that the first character in the string that is not digit is 'f'. 
+
+
+-->If a ^ character appears in a character class but isn’t the first character, then it has no special meaning and matches a literal '^' character:
+
+example:
+--------
+import re
+
+print(re.search('[#:^]', 'foo^bar:baz#'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='^'>
+
+
+-->usually you can specify a range of characters in a character class by separating characters with a hyphen. what if you want the character class to include a literal hyphen character?. you can place it as the first or last character or escape it with a backslash(\). see below : 
+
+example:
+--------
+import re
+
+print(re.search('[-abc]', '123-456'))
+
+print(re.search('[abc-]', '123-456'))
+
+print(re.search('[ab\-c]', '123-456'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='-'>
+<re.Match object; span=(3, 4), match='-'>
+<re.Match object; span=(3, 4), match='-'>
+
+
+-->If you want to include a literal ']' in a character class, then you can place it as the first character or escape it with backslash:
+
+example:
+--------
+import re
+
+print(re.search('[]]', 'foo[1]'))
+
+print(re.search('[ab\]cd]', 'foo[1]'))
+
+output:
+-------
+<re.Match object; span=(5, 6), match=']'>
+<re.Match object; span=(5, 6), match=']'>
+
+
+-->Other regex metacharacters lose their special meaning inside a character class:
+
+example:
+--------
+import re
+
+print(re.search('[)*+|]', '123*456'))
+
+print(re.search('[)*+|]', '123+456'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='*'>
+<re.Match object; span=(3, 4), match='+'>
+
+-->As you saw in the table above, * and + have special meanings in a regex in Python. They designate repetition, which you’ll learn more about shortly. But in this example, they’re inside a character class, so they match themselves literally.
+
+
+dot(.):
+-------
+-->used to specifies a wildcard. the '.' metacharacter matches any single character except a new line. 
+
+example:
+--------
+import re
+
+print(re.search('foo.bar', 'fooxbar'))
+
+print(re.search('foo.bar', 'foobar'))
+
+print(re.search('foo.bar', 'foo\nbar'))
+
+output:
+-------
+<re.Match object; span=(0, 7), match='fooxbar'>
+None
+None
+
+-->As a regex, foo.bar essentially means the characters 'foo', then any character except newline, then the characters 'bar'. The first string shown above, 'fooxbar', fits string because the . metacharacter matches the 'x'.
+
+The second and third strings fail to match. In the last case, although there’s a character between 'foo' and 'bar', it’s a newline, and by default, the . metacharacter doesn’t match a newline.
+
+\w and \W :
+-----------
+-->this is used to match based on whether a character is word character. 
+
+-->\w matches any alphanumeric word character. Word characters are uppercase and lowercase letters, digits, and the underscore (_) character, so \w is essentially shorthand for [a-zA-Z0-9_]:
+
+example:
+--------
+import re
+
+print(re.search('\w', '#(.a$@&'))
+
+print(re.search('[a-zA-Z0-9_]', '#(.a$@&'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='a'>
+<re.Match object; span=(3, 4), match='a'>
+
+-->In this case, the first word character in the string '#(.a$@&' is 'a'.
+
+
+\d and \D:
+----------
+-->this is used to match based on whether a character is a decimal digit. \d matches any decimal digit character. \D is the opposite. it matches any character that is not decimal digit. 
+
+example:
+--------
+import re
+
+print(re.search('\d', 'abc4def'))
+
+print(re.search('\D', '234Q678'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='4'>
+<re.Match object; span=(3, 4), match='Q'>
+
+-->\d is essentially equivalent to [0-9], and \D is equivalent to [^0-9].
+
+
+\s and \S:
+----------
+-->this is used to match based on whether a character represents whitespace. \s matches any whitespace character. 
+
+example:
+--------
+import re
+
+print(re.search('\s', 'foo\nbar baz'))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='\n'>
+
+-->unlike the dot wildcard metacharacter, \s does match a newline character. 
+
+-->\S is the opposite of \s. It matches any character that is not whitespace. 
+
+example:
+--------
+import re
+
+print(re.search('\S', ' \n foo \n '))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='f'>
+
+-->again, \s, \S consider a newline to be whitespace. here the first non-whitespace character is 'f'. 
+
+-->The character class sequences \w, \W, \d, \D, \s, and \S can appear inside a square bracket character class as well.
+
+example:
+--------
+import re
+
+print(re.search('[\d\w\s]', '---3---'))
+
+print(re.search('[\d\w\s]', '---a---'))
+
+print(re.search('[\d\w\s]', '--- ---'))
+
+
+output:
+-------
+<re.Match object; span=(3, 4), match='3'>
+<re.Match object; span=(3, 4), match='a'>
+<re.Match object; span=(3, 4), match=' '>
+
+-->In this case, [\d\w\s] matches any digit, word, or whitespace character. And since \w includes \d, the same character class could also be expressed slightly shorter as [\w\s].
+
+Escaping metacharacters:
+------------------------
+-->sometimes we want to mention a metacharacter in our regualar expression and we dont' want it carry its special meaning. at that time we want to represent itself as a literal character.
+
+backslash(\):
+-------------
+-->this is used to removes the special meaning of a metacharacter.  A metacharacter preceded by a backslash loses its special meaning and matches the literal character instead.
+
+example:
+--------
+import re
+
+print(re.search('.', 'foo.bar'))
+
+print(re.search('\.', 'foo.bar'))
+
+output:
+-------
+<re.Match object; span=(0, 1), match='f'>
+<re.Match object; span=(3, 4), match='.'>
+
+
+-->here in teh first line the dot functions as a wildcard metacharacter, which matches the first character in teh string 'f'. the '.' character in the second print statement, it is escaped by a backslash, so it is not a wildcard. it is interpreted literally and matches the '.' at the 3 position of the string. 
+
+-->Using backslashes for escaping can get messy. Suppose you have a string that contains a single backslash. let's say string = r'foo\bar'. now you want to create a regex that will match teh backslash between 'foo' and 'bar'. the backslash is itself is a special character in a regex. so to specify a literal backslash, we need to escape it with antoher backslash. 
+
+example:
+--------
+import re
+
+s = r'foo\bar'
+
+print(re.search('\\', s))
+
+output:
+-------
+Traceback (most recent call last):
+  File "C:\Users\this\Desktop\sample1.py", line 5, in <module>
+    print(re.search('\\', s))
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\re.py", line 304, in _compile
+    p = sre_compile.compile(pattern, flags)
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\sre_compile.py", line 764, in compile
+    p = sre_parse.parse(p, flags)
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\sre_parse.py", line 940, in parse
+    source = Tokenizer(str)
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\sre_parse.py", line 232, in __init__
+    self.__next()
+  File "C:\Users\this\AppData\Local\Programs\Python\Python38\lib\sre_parse.py", line 245, in __next
+    raise error("bad escape (end of pattern)",
+re.error: bad escape (end of pattern) at position 0
+
+
+-->this returned the error, because interpreter is taking this expression in the wrong way. to avoid this error, use 2 escape sequences again. 
+
+example:
+--------
+import re
+
+s = r'foo\bar'
+
+print(re.search('\\\\', s))
+
+output:
+-------
+<re.Match object; span=(3, 4), match='\\'>

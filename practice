@@ -4179,3 +4179,349 @@ print(re.search('\\\\', s))
 output:
 -------
 <re.Match object; span=(3, 4), match='\\'>
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                                              19-01-2022
+                                              ----------
+
+task:
+-----
+Array operations : efficient meeting:
+-------------------------------------
+there are N people in an organization. they are located on different point of the nubmer line. they have decided to meet a  common point. Find the minimum distance they have to cover in totoal to meet at a common point. 
+
+input format:
+-------------
+The input consist of single number N, denoting the numbers of people in the organization. the second line  consist of an array X of N integers, denoting the positions of the people on the line.
+
+constraints:
+------------
+1 <= N <= 100
+
+output format:
+--------------
+-->the output contains the single integer which is denoting the minimum total distance they have to travel to meet at the common point. 
+
+explanation:
+------------
+-->let's take the meeting point as 10.
+
+solutions:
+----------
+def min_distance(N, X):
+
+    result = 0
+    point = 10
+
+    for i in X:
+        if i < point:
+            result = result + (point - i)
+
+        elif i > point:
+            result = result + (i - point)
+
+    return result
+
+N = int(input('enter the number of points : '))
+
+X = []
+
+for i in range(N):
+    value = int(input('enter the value : '))
+    X.append(value)
+
+print(min_distance(N, X))
+    
+output:
+-------
+enter the number of points : 4
+enter the value : 20
+enter the value : 50
+enter the value : 40
+enter the value : 60
+130
+
+
+
+task:
+-----
+You and Fredrick are good friends. Yesterday, Fredrick received  credit cards from ABCD Bank. He wants to verify whether his credit card numbers are valid or not. You happen to be great at regex so he is asking for your help!
+
+A valid credit card from ABCD Bank has the following characteristics:
+
+► It must start with a 4,5 or 6 .
+► It must contain exactly  digits.
+► It must only consist of digits (-).
+► It may have digits in groups of , separated by one hyphen "-".
+► It must NOT use any other separator like ' ' , '_', etc.
+► It must NOT have  or more consecutive repeated digits.
+
+solution :(not finished)
+----------
+number = '5122-2368-7954-3214'
+
+
+def starts():
+    if number.startswith(('4', '5', '6')):
+        return True
+
+
+def delimiter():
+    for i in number:
+        if not i.isdigit() and i == '-':
+            return i
+        else:
+            return False
+
+def length():
+    num_list = number.split(delimiter())
+    if len(num_list) == 16:
+        return True
+
+            
+def repeat(i):
+    temp = []
+    for number in i:
+        if number.count(i) > 3:
+            return False
+        else:
+            return True          
+            
+            
+print(starts())
+print(delimiter())
+repeat()
+
+
+data classes:
+-------------
+--> A data class is a class typically containing mainly data, although there aren’t really any restrictions. It is created using the new @dataclass decorator. the sample one looks like this : 
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+    name: str
+    number: int
+
+
+-->let's write a sample program using the data classes. see below : 
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+    name : str
+    number : int
+
+obj = Sample('john', 123)
+
+print(obj.name)
+print(obj)
+
+output:
+-------
+john
+Sample(name='john', number=123)
+
+
+-->here I created a simple classes using the data classes. here I used the syntax name : str, which means we are using the type annotations. here if we write the type hints in wrong way like, name : int, number : str, this won't give the error. the reason is mentioning the type hint is for user readability. see below :
+
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+    name : int
+    number : str
+
+obj = Sample('john', 123)
+
+print(obj.name)
+print(obj)
+
+output:
+-------
+john
+Sample(name='john', number=123)
+
+-->see here it don't give any error. 'john' goes to the name field and '123' goes to the number field. 
+
+-->using the dataclasses we can also compare the 2 dataclass instances. see below : 
+
+example:
+-------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+
+    name : str
+    number : int
+
+obj = Sample('john', 123)
+
+print(obj.name)
+
+print(obj)
+
+print(obj == Sample('john', 123))
+
+output:
+-------
+john
+Sample(name='john', number=123)
+True
+
+-->here obj == sample('john', 123) means, we are comparing the 2 instances. here both the objects has the same data, that is why it is returning true. if both the objects has the different data, then it will return the false. see below : 
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+
+    name : str
+    number : int
+
+obj = Sample('john', 123)
+
+print(obj.name)
+
+print(obj)
+
+print(obj == Sample('mike', 123))
+
+output:
+-------
+john
+Sample(name='john', number=123)
+False
+
+
+-->let's just compare this with our regular classes, where we use the __init__() constructor. see below : 
+
+example;
+--------
+class Sample:
+
+    def __init__(self, name, number):
+        self.name = name
+        self.number = number
+
+obj = Sample('mike', 123)
+
+print(obj.name)
+
+print(obj)
+
+print(obj == Sample("mike", 123))
+
+otuput:
+-------
+mike
+<__main__.Sample object at 0x0000000002D02EB0>
+False
+
+-->when compare this to the data classes, we have to write lot of things. Furthermore, if you try to use this plain class, you’ll notice that the representation of the objects is not very descriptive. while using the dataclasses if we pritn the objects it prints the view object,but  when we are writing the plain classes, when print the object, it prints the address.
+
+-->another thing is we can compare 2 instances, but even their data is same, it will return false. 
+
+-->data classes are helping us out behind the scenes. By default, data classes implement a .__repr__() method to provide a nice string representation and an .__eq__() method that can do basic object comparisons. For the Sample class to imitate the data class above, you need to add these methods as well: 
+
+example:
+--------
+class Sample:
+
+    def __init__(self, name, number):
+        self.name = name
+        self.number = number
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}'
+                f'(name = {self.name!r}, number = {self.number!r})''
+
+    def __eq__(self, other):
+        if other.__class__ is not self.__class__:
+            return NotImplemented
+        return (self.name, self.number) == (other.name, other.number)
+
+
+obj = Sample('mike', 123)
+
+print(obj.name)
+
+print(obj)
+
+print(obj == Sample('mike', 123))
+
+output:
+-------
+mike
+Sample(name = 'mike', number = 123)
+True
+
+
+-->in dataclasses we can use the default values also. see below : 
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+
+    name : str
+    number : int = 123
+    age : int = 20
+
+obj = Sample('mike')
+
+print(obj.number)
+
+output:
+-------
+123
+
+-->This works exactly as if you had specified the default values in the definition of the .__init__() method of a regular class. here we can create the object in 4 different ways. see below : 
+
+example:
+--------
+from dataclasses import dataclass
+
+@dataclass
+class Sample:
+
+    name : str
+    number : int = 123
+    age : int = 20
+
+obj1 = Sample('mike')
+print(obj1)
+
+obj2 = Sample('mike', number = 123)
+print(obj2)
+
+obj3 = Sample('mike', age = 20)
+print(obj3)
+
+obj4 = Sample('mike', number = 123, age = 20)
+print(obj4)
+
+output:
+-------
+Sample(name='mike', number=123, age=20)
+Sample(name='mike', number=123, age=20)
+Sample(name='mike', number=123, age=20)
+Sample(name='mike', number=123, age=20)

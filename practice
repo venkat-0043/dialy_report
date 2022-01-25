@@ -5062,4 +5062,235 @@ output:
 2
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                                            24-01-2022
+                                            ----------
+
+Letter Combinations of a Phone Number:
+--------------------------------------
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+Example 1:
+
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+Example 2:
+
+Input: digits = ""
+Output: []
+Example 3:
+
+Input: digits = "2"
+Output: ["a","b","c"]
+ 
+
+Constraints:
+
+0 <= digits.length <= 4
+digits[i] is a digit in the range ['2', '9'].
+
+
+
+solution:
+---------
+#letter combinations of a phone number
+
+dict1 = {'2' : 'abc', '3' : 'def', '4' : 'ghi', '5' : 'jkl',
+         '6' : 'mno', '7' : 'pqrs', '8' : 'tuv', '9' : 'wxyz'}
+
+def order(string):
+
+    list1 = []
+
+    list2 = []
+    for i in string:
+        
+        list1.append(dict1[i])
+
+    for i in list1[0]:
+        for j in list1[1]:
+            list2.append(i + j)
+
+    return list2
+
+    
+string = '23'
+
+print(order(string))
+
+
+
+4sum:
+------
+
+Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+
+0 <= a, b, c, d < n
+a, b, c, and d are distinct.
+nums[a] + nums[b] + nums[c] + nums[d] == target
+You may return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+Example 2:
+
+Input: nums = [2,2,2,2,2], target = 8
+Output: [[2,2,2,2]]
+ 
+
+Constraints:
+
+1 <= nums.length <= 200
+-109 <= nums[i] <= 109
+-109 <= target <= 109
+
+
+solution:(partial)
+---------
+#4sum
+
+def foursum(nums, target):
+
+    for i in range(len(nums)):
+        for j in range(len(nums[i + 1 : ])):
+            for k in range(len(nums[j + 1: ])):
+                for l in range(len(nums[k + 1 : ])):
+                    temp = [nums[i], nums[j], nums[k], nums[l]]
+        
+                    if len(temp) == 4 and (min(temp) >= 0 and max(temp) <= len(nums)) and sum(temp) == 0:
+                        print(temp)
+
+
+nums = [1, 0, -1, 0 -2, 2]
+target = 0
+
+print(foursum(nums, target))
+
+
+
+valid parenthesis:
+------------------
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+ 
+
+Example 1:
+
+Input: s = "()"
+Output: true
+Example 2:
+
+Input: s = "()[]{}"
+Output: true
+Example 3:
+
+Input: s = "(]"
+Output: false
+
+solution:
+---------
+#valid parentheses
+
+start = '({['
+end = ')}]'
+
+def valid(s):
+    flag = False
+    for i in range(0, len(s), 2):
+        if len(s) % 2 == 0:
+            if s[i] in start:
+                temp = s.index(s[i])
+                if s[i + 1] == end[temp]:
+                    flag = True
+                else:
+                    flag = False
+
+        if len(s) % 2 != 0:
+            flag = False
+
+    return flag
+        
+    
+s = "()[]"
+
+print(valid(s))
+
+output:
+-------
+True
+
+
+
+task: find the first and last position of element in sorted array.
+------
+Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+
+If target is not found in the array, return [-1, -1].
+
+You must write an algorithm with O(log n) runtime complexity.
+
+ Example 1:
+
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+Example 2:
+
+Input: nums = [5,7,7,8,8,10], target = 6
+Output: [-1,-1]
+Example 3:
+
+Input: nums = [], target = 0
+Output: [-1,-1]
+ 
+
+Constraints:
+
+0 <= nums.length <= 105
+-109 <= nums[i] <= 109
+nums is a non-decreasing array.
+-109 <= target <= 109
+
+solution:
+---------
+#find the first and last position of element in sorted array.
+
+def element(nums, target):
+
+    fail = [-1, -1]
+    match = []
+
+    if nums.count(target) >= 2:
+        temp = nums.index(target)
+        match.append(temp)
+        temp1 = nums.index(target, temp + 1)
+        match.append(temp1)
+
+        return match
+
+    else:
+        return fail
+
+
+nums = [5,7, 7, 8, 8,10]
+target = 8
+
+print(element(nums, target))
+
+output:
+-------
+[3, 4]
+
 

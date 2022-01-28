@@ -5294,3 +5294,278 @@ output:
 [3, 4]
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+									27-01-2022
+									----------
+
+
+#function to conversion of the excel sheet into the dataframe
+
+import pandas as pd
+
+def read_excel_file():
+    
+    file = pd.read_excel('FinancialSample.xlsx')
+
+    return type(file)
+
+print(read_excel_file())
+
+output:
+-------
+<class 'pandas.core.frame.DataFrame'>
+
+--------------------------------------------------------------------------------------------------------------
+
+#read the xml file and convert into the dataframe.
+
+import pandas as pd
+
+def read_xml_file():
+
+    file = pd.read_xml('employee.xml')
+
+    return type(file)
+
+
+print(read_xml_file())
+
+output:
+-------
+<class 'pandas.core.frame.DataFrame'>
+
+---------------------------------------------------------------------------------------------------------------
+
+#read the xml file and convert into the dataframe.
+
+import pandas as pd
+
+def read_xml_file():
+
+    file = pd.read_xml('employee.xml')
+
+    for i in file:
+        print(i)
+
+
+read_xml_file()
+
+output:
+-------
+id
+name
+email
+password
+about
+token
+country
+location
+lng
+lat
+dob
+gender
+userType
+userStatus
+profilePicture
+coverPicture
+enablefollowme
+sendmenotifications
+sendTextmessages
+enabletagging
+createdAt
+updatedAt
+livelng
+livelat
+liveLocation
+creditBalance
+myCash
+
+--------------------------------------------------------------------------------------------------------------
+
+#convert set to list
+
+def set_to_list(set1):
+
+    list1 = []
+
+    list1 = list(set1)
+
+    return list1
+
+
+set1 = {1,2,3,(1,2), 'hello world'}
+
+print(set_to_list(set1))
+
+output:
+-------
+[1, 2, (1, 2), 3, 'hello world']
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+#function to find the average of the parameters
+
+import pandas as pd
+
+import os
+os.chdir(r'C:\Users\this\Desktop')
+
+def average_param():
+    
+    df = pd.read_excel('FinancialSample.xlsx')
+
+    for i, j, k in zip(df, df.dtypes, range(1, 14)):
+        if j in ['float64', 'int64']:
+            print(i, ' : ', df[i].mean())
+            print()
+
+average_param()
+
+output:
+-------
+Units Sold  :  1608.2942857142857
+
+Manufacturing Price  :  96.47714285714285
+
+Sale Price  :  118.42857142857143
+
+Gross Sales  :  182759.42642857143
+
+Discounts  :  13150.35462857143
+
+ Sales  :  169609.07179999998
+
+COGS  :  145475.21142857143
+
+Profit  :  24133.860371428567
+
+
+--------------------------------------------------------------------------------------------------------------
+
+#find the set of unique parameters
+
+import pandas as pd
+
+import os
+os.chdir(r'C:\Users\this\Desktop')
+
+def get_unique():
+    
+    df = pd.read_excel("FinancialSample.xlsx")
+    
+    #reading each column in the dataframe
+    for i in df:
+        print(i, df[i].unique())
+
+get_unique()
+
+output:
+-------
+
+
+--------------------------------------------------------------------------------------------------------------
+
+#create average parameter dataframe(createt  a row with average)
+
+import pandas as pd
+
+import os
+os.chdir(r'C:\Users\this\Desktop')
+
+def add_average():
+    
+    df = pd.read_excel('FinancialSample.xlsx')
+    
+    dict1 = {}
+    
+    for i, j in zip(df, df.dtypes):
+        if j in ['float64', 'int64']:
+            dict1[i] = df[i].mean()
+            
+    #adding the average column at the end        
+    df = df.append(dict1, ignore_index = True)
+    
+    print(df.tail(3))
+
+add_average()
+
+output:
+-------
+              Segment                   Country Product Discount Band  \
+698        Government                    Canada   Paseo          High   
+699  Channel Partners  United States of America     VTT          High   
+700               NaN                       NaN     NaN           NaN   
+
+      Units Sold  Manufacturing Price  Sale Price    Gross Sales  \
+698   723.000000            10.000000    7.000000    5061.000000   
+699  1806.000000           250.000000   12.000000   21672.000000   
+700  1608.294286            96.477143  118.428571  182759.426429   
+
+        Discounts        Sales           COGS        Profit       Date  \
+698    759.150000    4301.8500    3615.000000    686.850000 2014-04-01   
+699   3250.800000   18421.2000    5418.000000  13003.200000 2014-05-01   
+700  13150.354629  169609.0718  145475.211429  24133.860371        NaT   
+
+     Month Number Month Name     Year  
+698           4.0      April  2014.00  
+699           5.0        May  2014.00  
+700           7.9        NaN  2013.75  
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+#create the report and send the it the email
+
+import smtplib
+
+port = 587
+
+sender_email = 'venkatreddy249@gmail.com'
+reciever_email = 'vanipanti@gmail.com'
+
+password = input('enter the password : ')
+
+#context = ssl.create_default_context()
+
+server = smtplib.SMTP('smtp.gmail.com', port = port)
+
+server.starttls()
+    
+server.login('venkatreddy249@gmail.com', password)
+
+server.sendmail(sender_email, reciever_email, 'hello world')
+
+
+--------------------------------------------------------------------------------------------------------------
+
+#find the all index position of the substring
+
+def substring(string, sub_string):    
+
+    length = len(sub_string)
+
+    #output : 1 3 5 7
+
+    for i in range(len(string)):
+        if string[i : i + length] == sub_string:
+            print(string[i : i + length], string.find(string[i: i + length], i))
+
+
+string = 'malayalam'
+
+sub_string = 'a'
+
+substring(string, sub_string)
+
+output:
+-------
+a 1
+a 3
+a 5
+a 7
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
